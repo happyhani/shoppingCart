@@ -18,6 +18,9 @@
     </style>
 </head>
 <body>
+	<!--通过v-for指令渲染地址数据以及数组过滤-->
+	<!--地址卡片选择-->
+	<!--地址默认显示3个，点击more显示更多-->
   <div class="address">
     <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <defs>
@@ -62,27 +65,28 @@
         </div>
         <div class="addr-list-wrap">
           <div class="addr-list">
-            <ul>
-              <li>
+            <ul >
+              <li v-for="(addressItem,index) in filterAddress" v-bind:class="{'check':index==currentIndex}" @click="currentIndex=index">
                 <dl>
-                  <dt>JackBean</dt>
-                  <dd class="address">北京朝阳区朝阳公园</dd>
-                  <dd class="tel">13356576785</dd>
+                  <dt>{{ addressItem.userName }}</dt>
+                  <dd class="address">{{ addressItem.streetName }}</dd>
+                  <dd class="tel">{{ addressItem.tel }}</dd>
                 </dl>
                 <div class="addr-opration addr-edit">
                   <a href="javascript:;" class="addr-edit-btn">
                     <svg class="icon icon-edit"><use xlink:href="#icon-edit"></use></svg>
                   </a>
                 </div>
-                <div class="addr-opration addr-del">
-                  <a href="javascript:;" class="addr-del-btn">
+                <div class="addr-opration addr-del" @click="delAddress(index)">
+                  <a href="javascript:;" class="addr-del-btn" >
                     <svg class="icon icon-del"><use xlink:href="#icon-del"></use></svg>
                   </a>
                 </div>
-                <div class="addr-opration addr-set-default">
-                  <a href="javascript:;" class="addr-set-default-btn" ><i>设为默认</i></a>
+                <!--设为默认和默认是互斥的-->
+                <div class="addr-opration addr-set-default" v-if="!addressItem.isDefault">
+                  <a href="javascript:;" class="addr-set-default-btn" @click="setDefault(addressItem.addressId)"><i>设为默认</i></a>
                 </div>
-                <div class="addr-opration addr-default">默认地址</div>
+                <div class="addr-opration addr-default" v-if="addressItem.isDefault">默认地址</div>
               </li>
 
               <li class="addr-new">
@@ -97,7 +101,7 @@
           </div>
 
           <div class="shipping-addr-more">
-            <a class="addr-more-btn up-down-btn" href="javascript:">
+            <a class="addr-more-btn up-down-btn" href="javascript:" @click="limitNum=addressList.length">
               more
               <i class="i-up-down">
                 <i class="i-up-down-l"></i>
@@ -114,11 +118,11 @@
         <div class="shipping-method-wrap">
           <div class="shipping-method">
             <ul>
-              <li>
+              <li :class="{'check':shippingMethod==1}" @click="shippingMethod=1">
                 <div class="name">标准配送</div>
                 <div class="price">Free</div>
               </li>
-              <li>
+              <li :class="{'check':shippingMethod==2}" @click="shippingMethod=2">
                 <div class="name">高级配送</div>
                 <div class="price">180</div>
               </li>

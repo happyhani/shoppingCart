@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="js/lib/vue.min.js"></script>
+		
+	</head>
+	<body>
+		
+		<div id="app">
+			
+			<runoob message="局部组件"></runoob>
+			
+			<hani en="全局组件" enen="这里是"></hani>
+			
+			<hani v-for="item in todos" v-bind:todo="item.say"></hani>
+			
+			<span v-bind:title="message">鼠标悬停</span>
+			
+			<img v-bind:src=" 'img/test1.jpg' "/>
+			
+			<ul>
+				
+				<li v-for="(todo,index) in todos">
+					{{ todo.text + ' --index: ' + index }}
+				</li>
+			</ul>
+			
+			<ul>
+				<li v-for="todo in todos">
+					{{ todo.money | currency }}
+				</li>
+			</ul>
+			
+			<input type="text" v-model="a" /><br />
+			
+			prop验证：
+			<example></example>
+			
+			单个勾选框:
+			<input type="checkbox" id="checkbox" v-model="checked">
+			<label for="checkbox">{{ checked }}</label>
+			
+		</div>
+		
+		<script>
+	
+			//过滤
+			Vue.filter('currency', function (value) {
+//			      if (!value) return ''
+//			      value = value.toString()
+//			      return value.charAt(0).toUpperCase() + value.slice(1)
+			  return "¥" + value.toFixed(2);
+			
+			})
+	
+			var Child = {
+				 template: '<h1>runoob：{{ message }}</h1>',
+				 props: ['message']
+				 
+			}
+			
+			//prop验证
+			Vue.component('example', {
+			  template: ' <div> <h3>{{title}}</h3> <p>{{ propE }}</p> <i>{{propD}}</i> </div> ',
+			  data () {
+			  	return {title:"越人歌"}
+			  },
+			  props: {
+			  	
+			    // 基础类型检测 （`null` 意思是任何类型都可以）
+			    propA: Number,
+			    // 多种类型
+			    propB: [String, Number],
+			    // 必传且是字符串
+			    propC: {
+			      type: String,
+			      required: true
+			    },
+			    // 数字，有默认值
+			    propD: {
+			      type: Number,
+			      default: 100
+			    },
+			    // 数组／对象的默认值应当由一个工厂函数返回
+			    propE: {
+			      type: Object,
+			      default: function () {
+			        return { message: 'hello' }
+			      }
+			    },
+			    // 自定义验证函数
+			    propF: {
+			      validator: function (value) {
+			        return value > 10
+			      }
+			    }
+			  }
+			})
+			
+			// 全局注册 所有实例都能用全局组件。
+			Vue.component('hani', {
+				props: ['en','enen','todo'],
+				
+			  	template: '<h1>{{ enen }}哈尼!{{ en }} 说：{{ todo }}</h1>'
+			})
+			
+			// 创建根实例
+			var vm = new Vue({
+			  el: '#app',  
+			  data:{
+			  	message:'哈哈' + new Date(),
+			  	checked: false,
+			  	todos: [
+			  		{ text: '学习 JavaScript',
+			  		  say: '哎呦',
+			  		  money:10
+			  		  
+			  		},
+			      	{ text: '学习 Vue' , 
+			      	  say: '对对对！',
+			      	  money:20
+			      	},
+			      	{ text: '整个牛项目' , 
+			      	  say: '不拜拜！',
+			      	  money:30
+			      	}
+			  	],
+			  	'a':1,
+			  	title:"越人歌"
+			  	
+			  },
+			  
+			  //局部组件：只能在这个实例中使用
+			  components:{ 
+    			'runoob': Child
+			  }
+			  
+			  
+			  
+			  
+			})
+			
+//			当数据a改变时触发
+			vm.$watch('a',function (newValue, oldVal) {
+			  console.log(this.a);
+			})
+		</script>
+	</body>
+
+</html>

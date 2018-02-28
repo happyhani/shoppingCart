@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			.class1 {
+				color:  hsl(270,100%,50%);
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			
+			<input type="text" v-model="message" name="text" class="class1" v-bind:class=""/>
+			<!--{{message}}-->
+			<div v-if="bool" v-text="message"  :class="{class1:divbg}">
+			  <!--fdvgf //不能显示-->
+			</div>
+			
+			<button @click="clickFn" >弹出</button>
+			
+			<fieldset id="">
+				<legend>computed</legend>
+				<p>{{message}}</p>
+				<p>{{reversedMessage}}</p>
+			</fieldset>
+			
+			<fieldset id="">
+				<legend>事件处理器</legend>
+				<button v-on:click="count += 1">点击</button>
+				<p>这个按钮被点击了 {{ count }} 次</p>
+				
+			</fieldset>
+			
+			<fieldset id="">
+				<legend>事件修饰符</legend>
+				
+				<!-- 只有修饰符 -->
+				<form v-on:submit.prevent>
+					<input type="submit"  value="提交" />
+					<input type="text" name="text" id="url" value="" />
+					
+					<!--按键修饰符 只有在 keyCode 是 13 时调用 vm.submit() -->
+					<input v-on:keyup.13="submit">
+					
+					<!-- Alt + C -->
+					<input @keyup.alt.67="clear">
+					<!-- Ctrl + Click -->
+					<div @click.ctrl="doSomething">Do something</div>
+				</form>
+			</fieldset>
+		</div>
+		<script src="js/lib/vue.min.js"></script>
+		<script>
+			var vm = new Vue({
+				el:"#app",
+				data:{
+					message:"Hello Vue!",
+					divbg: true,
+					bool:true,
+					message:"abc嘻嘻哈哈123",
+					count:0
+				},
+				mountd:{
+					
+				},
+				computed:{
+//					 computed 是基于它的依赖缓存，只有相关依赖发生改变时才会重新取值。
+
+					 // 计算属性的 getter
+//					 提供的函数将用作属性 vm.reversedMessage 的 getter 。
+//					 vm.reversedMessage 依赖于 vm.message，
+//					 在 vm.message 发生改变时， vm.reversedMessage 也会更新。
+				    reversedMessage: function () {
+				      // `this` 指向 vm 实例
+				      return this.message.split('').reverse().join('')
+  					},
+  					siter: {
+				      // getter
+				      get: function () {
+				        return this.name + ' ' + this.url
+				      },
+				      // setter
+				      set: function (newValue) {
+				        var names = newValue.split(' ')
+				        this.name = names[0]
+				        this.url = names[names.length - 1]
+				      }
+				    }
+				},
+				methods:{
+//					 methods ，在重新渲染的时候，函数总会重新调用执行。
+					clickFn:function (event) {
+						// `this` 在方法里指当前 Vue 实例
+						this.divbg = !this.divbg;
+						// `event` 是原生 DOM 事件
+						alert(event.target.tagName);
+					}
+				}
+			});
+			
+			// 调用 setter， vm.name 和 vm.url 也会被对应更新
+			vm.siter = '菜鸟教程 http://www.runoob.com';
+			document.write('name: ' + vm.name);
+			document.write('<br>');
+			document.write('url: ' + vm.url);
+		</script>
+	</body>
+</html>

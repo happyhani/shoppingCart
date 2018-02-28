@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>vue事件处理</title>
+		<script src="js/lib/vue.min.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<button v-on:click.once="greet($event)">按钮</button>
+			<input v-on:keyup.enter="sub" />
+			<input @keyup.ctrl="clear" placeholder="ctrl" />
+			<input type="checkbox" id="checkbox" v-model="checked">
+			<label for="checkbox">{{ checked }}</label>
+			<input v-model.lazy="msg" />
+			<input v-model.trim="msg" />
+			
+		</div>
+		
+	</body>
+	<script>
+		new Vue({
+			el:'#app',
+			data:{
+				text:"哈哈",
+				checked: true,
+				msg:'123'
+			},
+			methods:{
+				greet:function (event) {
+					console.log(this.text+event.type);
+				},
+				sub: function () {
+					console.log('tijiao');
+				},
+				clear: function () {
+					console.log('keyupCtrl');
+				}
+			}
+		})
+	</script>
+</html>
